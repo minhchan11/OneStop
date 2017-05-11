@@ -1,3 +1,4 @@
+/// <binding BeforeBuild='build' ProjectOpened='watch' />
 var gulp = require('gulp');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
@@ -24,10 +25,14 @@ var lib = require('bower-files')({
   }
 });
 
+var config = {
+    //Include all js files but exclude any min.js files
+    src: ['./wwwroot/**/*.js', '!./wwwroot/**/*.min.js']
+}
 
 
 gulp.task('jsBrowserify', ['concatInterface'],function() {
-  return browserify({ entries: ['./tmp/allConcat.js']})
+    return browserify({ entries: ['./wwwroot/tmp/allConcat.js'] })
   .bundle()
   .pipe(source('app.js'))
   .pipe(gulp.dest('./wwwroot/build/js'));
@@ -36,7 +41,7 @@ gulp.task('jsBrowserify', ['concatInterface'],function() {
 gulp.task('concatInterface', function() {
     return gulp.src(['./wwwroot/js/*-interface.js'])
     .pipe(concat('allConcat.js'))
-    .pipe(gulp.dest('./tmp'));
+    .pipe(gulp.dest('./wwwroot/tmp'));
 });
 
 gulp.task("minifyScrpts", ["jsBrowserify"], function() {
@@ -86,11 +91,19 @@ gulp.task('serve', function() {
       baseDir: "./"
     }
   });
-  gulp.watch(['*.js'], ['jsBuild']);
+  //gulp.task('watch', function () {
+  //    gulp.watch([config.src], ['jsBuild']);
+  //});
+  gulp.watch([config.src], ['jsBuild']);
   gulp.watch(['bower.json'], ['bowerBuild']);
   gulp.watch(['*.html'], ['htmlBuild']);
 });
 
+gulp.task('watch', function () {
+    gulp.watch([config.src], ['jsBuild','htmlBuild']);
+    gulp.watch(['bower.json'], ['bowerBuild']);
+    gulp.watch(['*.html'], ['htmlBuild']);
+});
 gulp.task('jsBuild', ['jsBrowserify', 'jshint'], function(){
   browserSync.reload();
 });
