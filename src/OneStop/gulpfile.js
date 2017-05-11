@@ -100,10 +100,13 @@ gulp.task('serve', function() {
 });
 
 gulp.task('watch', function () {
-    gulp.watch([config.src], ['jsBuild','htmlBuild']);
-    gulp.watch(['bower.json'], ['bowerBuild']);
-    gulp.watch(['*.html'], ['htmlBuild']);
+    gulp.watch(['./wwwroot/js/*.js', './wwwroot/css/*.scss'], function (event) {
+        if (event.type === 'changed') {
+            gulp.start('build');
+        }
+    });
 });
+
 gulp.task('jsBuild', ['jsBrowserify', 'jshint'], function(){
   browserSync.reload();
 });
