@@ -67,4 +67,24 @@ Travel.prototype.getHotels = function () {
         }
     });
 };
+
+
+Travel.prototype.getWeather = function () {
+    $.ajax({
+        url: "Home/Weather",
+        type: 'POST',
+        dataType: "json",
+        data: { place: this.place },
+        success: function (response) {
+            var forecast = response.list;
+            var chosen = [6, 14, 22, 30, 38];
+            for (var j = 0; j < chosen.length; j++) {
+                var getDate = forecast[chosen[j]].dt_txt.toString().slice(0, 10);
+                var toFarenheit = (parseFloat(forecast[chosen[j]].main.temp_min) * 9 / 5 - 460).toFixed(2);
+                $("#weather").append("<div class='col-md-2'>" + "<div class='panel panel-default'>" + "<div class='panel-heading'>" + "Date: " + getDate + "</div>" + "<div class='panel-body'>" + " Temperature: " + toFarenheit + "<br>" + "Forecast: " + forecast[chosen[j]].weather[0].main + "</div>" + "</div>" + "</div>");
+            }
+        }
+    });
+};
+
 exports.travelObject = Travel;

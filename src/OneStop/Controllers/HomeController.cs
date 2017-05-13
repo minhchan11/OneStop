@@ -106,6 +106,24 @@ namespace OneStop.Controllers
             return Json(jsonResponse);
         }
 
+        [HttpPost]
+        public IActionResult Weather(string place)
+        {
+            var client = new RestClient("http://api.openweathermap.org/data/2.5");
+            var request = new RestRequest("/forecast", Method.GET);
+            request.AddParameter("q", place);
+            request.AddParameter("appid", env.apiWeatherKey);
+            var response = new RestResponse();
+            Task.Run(async () =>
+            {
+                response = await GetResponseContentAsync(client, request) as RestResponse;
+            }).Wait();
+
+            JObject jsonResponse = JsonConvert.DeserializeObject<JObject>(response.Content);
+
+            return Json(jsonResponse);
+        }
+
 
         public static Task<IRestResponse> GetResponseContentAsync(RestClient theClient, RestRequest theRequest)
         {

@@ -12,7 +12,7 @@ $(document).ready(function () {
         var newPosition = newTravel.getCoordinate();
         newTravel.getRestaurants();
         newTravel.getHotels();
-        //newTravel.getWeather();
+        newTravel.getWeather();
         //setTimeout(function () {
         //    newTravel.getAttractions(newPosition[0], newPosition[1]);
         //}, 50);
