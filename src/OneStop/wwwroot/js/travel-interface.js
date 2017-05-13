@@ -9,7 +9,8 @@ $(document).ready(function () {
         $("#budgetConvert").text("");
         newTravel.place = $("#destination").val().replace(" ", "_").toLowerCase();
         newTravel.getInfo();
-        var newPosition = newTravel.getCoordinate();
+        var newBudget = parseFloat($("#budget").val());
+        var newPosition = newTravel.getCoordinate(newBudget);
         newTravel.getRestaurants();
         newTravel.getHotels();
         newTravel.getWeather();
@@ -19,14 +20,6 @@ $(document).ready(function () {
         //setTimeout(function () {
         //    newTravel.getAirport(newPosition[0], newPosition[1]);
         //}, 60);
-        //setTimeout(function () { newTravel.getCurrencyCode(newPosition[2]); }, 100);
-        //var newBudget = parseFloat($("#budget").val());
-        //setTimeout(function () {
-        //    if ($("#currency").text() !== "USD") {
-        //        $("#budgetConvert").removeClass("hidden");
-        //        newTravel.getExchange($("#currency").text(), newBudget);
-        //    }
-        //}, 200);
 
 
     });
