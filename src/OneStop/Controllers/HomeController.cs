@@ -68,6 +68,45 @@ namespace OneStop.Controllers
             return Json(jsonResponse);
         }
 
+        [HttpPost]
+        public IActionResult Restaurants(string place)
+        {
+            var client = new RestClient("http://api.yelp.com/v3");
+            var request = new RestRequest("/businesses/search", Method.GET);
+            request.AddParameter("term", "restaurant");
+            request.AddParameter("location", place);
+            request.AddHeader("Authorization", "Bearer Ao9wyNEJi_JdysZZ2BQGr0sG2CgKnj1Pe3QEEjbSa6__mbKWQYitQne4wAJAmWamYagq7-P-4iZb4mzAH6ZIs_bjomtWwuU4XeFck6RhJmuQihOFdWMZqGIWhAUSWXYx");
+            var response = new RestResponse();
+            Task.Run(async () =>
+            {
+                response = await GetResponseContentAsync(client, request) as RestResponse;
+            }).Wait();
+
+            JObject jsonResponse = JsonConvert.DeserializeObject<JObject>(response.Content);
+
+            return Json(jsonResponse);
+        }
+
+        [HttpPost]
+        public IActionResult Hotels(string place)
+        {
+            var client = new RestClient("http://api.yelp.com/v3");
+            var request = new RestRequest("/businesses/search", Method.GET);
+            request.AddParameter("term", "hotel");
+            request.AddParameter("location", place);
+            request.AddHeader("Authorization", "Bearer Ao9wyNEJi_JdysZZ2BQGr0sG2CgKnj1Pe3QEEjbSa6__mbKWQYitQne4wAJAmWamYagq7-P-4iZb4mzAH6ZIs_bjomtWwuU4XeFck6RhJmuQihOFdWMZqGIWhAUSWXYx");
+            var response = new RestResponse();
+            Task.Run(async () =>
+            {
+                response = await GetResponseContentAsync(client, request) as RestResponse;
+            }).Wait();
+
+            JObject jsonResponse = JsonConvert.DeserializeObject<JObject>(response.Content);
+
+            return Json(jsonResponse);
+        }
+
+
         public static Task<IRestResponse> GetResponseContentAsync(RestClient theClient, RestRequest theRequest)
         {
             var tcs = new TaskCompletionSource<IRestResponse>();

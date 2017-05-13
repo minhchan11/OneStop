@@ -10,8 +10,8 @@ $(document).ready(function () {
         newTravel.place = $("#destination").val().replace(" ", "_").toLowerCase();
         newTravel.getInfo();
         var newPosition = newTravel.getCoordinate();
-        //newTravel.getLocalRestaurants();
-        //newTravel.getLocalHotels();
+        newTravel.getRestaurants();
+        newTravel.getHotels();
         //newTravel.getWeather();
         //setTimeout(function () {
         //    newTravel.getAttractions(newPosition[0], newPosition[1]);

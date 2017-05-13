@@ -28,16 +28,43 @@ Travel.prototype.getCoordinate = function () {
         dataType: "json",
         data: { place: this.place },
         success: function (response) {
-            console.log(response);
             position.push(response.Response.View[0].Result[0].Location.DisplayPosition.Latitude);
             position.push(response.Response.View[0].Result[0].Location.DisplayPosition.Longitude);
             position.push((response.Response.View[0].Result[0].Location.Address.Country).toLowerCase());
-            console.log(response);
         }
     }).then(function () {
-        console.log(position);
+        //console.log(position);
     });
     return position;
 };
 
+Travel.prototype.getRestaurants= function () {
+    $.ajax({
+        url: "Home/Restaurants",
+        type: 'POST',
+        dataType: "json",
+        data: { place: this.place },
+        success: function (response) {
+            var restaurants = response['businesses'];
+            restaurants.forEach(function (item) {
+                $("#restaurant").append("<div class='col-md-1 newRes'>" + "<img class='pics' src=" + item.image_url + ">" + "<br>" + "<a href=" + item.url + ">" + item.name + "</a>" + "<br>" + "<p>" + item.rating + "&#9733" + "</p>" + "</div>");
+            });   
+        }
+    });
+};
+
+Travel.prototype.getHotels = function () {
+    $.ajax({
+        url: "Home/Hotels",
+        type: 'POST',
+        dataType: "json",
+        data: { place: this.place },
+        success: function (response) {
+            var hotels = response['businesses'];
+            hotels.forEach(function (item) {
+                $("#hotel").append("<div class='col-md-1 newHotel'>" + "<img class='pics' src=" + item.image_url + ">" + "<br>" + "<a href=" + item.url + ">" + item.name + "</a>" + "<br>" + "<p>" + item.rating + "&#9733" + "</p>" + "</div>");
+            });
+        }
+    });
+};
 exports.travelObject = Travel;
