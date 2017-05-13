@@ -9,7 +9,7 @@ $(document).ready(function () {
         $("#budgetConvert").text("");
         newTravel.place = $("#destination").val().replace(" ", "_").toLowerCase();
         newTravel.getInfo();
-        //var newPosition = newTravel.getCoordinate();
+        var newPosition = newTravel.getCoordinate();
         //newTravel.getLocalRestaurants();
         //newTravel.getLocalHotels();
         //newTravel.getWeather();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using OneStop.Model;
 using RestSharp;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
@@ -30,7 +31,30 @@ namespace OneStop.Controllers
             request.AddParameter("page", place);
             request.AddParameter("prop", "text");
             request.AddParameter("section", 0);
-            request.AddParameter("Api-User-Agent", "MyCoolTool/1.1 (http://example.com/MyCoolTool/; MyCoolTool@example.com) BasedOnSuperLib/1.4", ParameterType.HttpHeader);
+            request.AddHeader("Api-User-Agent", "Travel-App");
+
+            var response = new RestResponse();
+
+            Task.Run(async () =>
+            {
+                response = await GetResponseContentAsync(client, request) as RestResponse;
+            }).Wait();
+
+            JObject jsonResponse = JsonConvert.DeserializeObject<JObject>(response.Content);
+
+            return Json(jsonResponse);
+        }
+
+        [HttpPost]
+        public IActionResult Coord(string place)
+        {
+            var client = new RestClient("https://geocoder.cit.api.here.com/6.2/");
+
+            var request = new RestRequest("geocode.json?",Method.GET);
+            request.AddParameter("searchtext", place);
+            request.AddParameter("app_id", env.HereKey);
+            request.AddParameter("app_code", env.HereSecret);
+            request.AddParameter("gen", "8");
 
             var response = new RestResponse();
 

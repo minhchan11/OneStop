@@ -3,7 +3,6 @@
 }
 
 Travel.prototype.getInfo = function () {
-    console.log(this.place);
     $.ajax({
         url: "Home/Wiki",
         type: 'POST',
@@ -19,6 +18,26 @@ Travel.prototype.getInfo = function () {
             $('#info-picture').html($(i).find('img').first());
         }
     });
+};
+
+Travel.prototype.getCoordinate = function () {
+    var position = [];
+    $.ajax({
+        url: "Home/Coord",
+        type: 'POST',
+        dataType: "json",
+        data: { place: this.place },
+        success: function (response) {
+            console.log(response);
+            position.push(response.Response.View[0].Result[0].Location.DisplayPosition.Latitude);
+            position.push(response.Response.View[0].Result[0].Location.DisplayPosition.Longitude);
+            position.push((response.Response.View[0].Result[0].Location.Address.Country).toLowerCase());
+            console.log(response);
+        }
+    }).then(function () {
+        console.log(position);
+    });
+    return position;
 };
 
 exports.travelObject = Travel;

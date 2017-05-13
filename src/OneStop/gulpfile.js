@@ -11,6 +11,9 @@ var buildProduction = utilities.env.production;
 var browserSync = require('browser-sync').create();
 var sass = require('gulp-sass');
 var sourcemaps = require('gulp-sourcemaps');
+var livereload = require('gulp-livereload');
+
+
 
 
 var lib = require('bower-files')({
@@ -30,6 +33,10 @@ var config = {
     src: ['./wwwroot/**/*.js', '!./wwwroot/**/*.min.js']
 }
 
+gulp.task('reload', function () {
+    // Change the filepath, when you want to live reload a different page in your project.
+    livereload.reload("./");
+});
 
 gulp.task('jsBrowserify', ['concatInterface'],function() {
     return browserify({ entries: ['./wwwroot/tmp/allConcat.js'] })
@@ -71,10 +78,10 @@ gulp.task("build",["clean"], function() {
 });
 
 gulp.task('bowerJS', function () {
-  return gulp.src(lib.ext('js').files)
-    .pipe(concat('vendor.min.js'))
-    .pipe(uglify())
-    .pipe(gulp.dest('./wwwroot/build/js'));
+    return gulp.src(lib.ext('js').files)
+      .pipe(concat('vendor.min.js'))
+      .pipe(uglify())
+      .pipe(gulp.dest('./wwwroot/build/js'));
 });
 
 gulp.task('bowerCSS', function() {
@@ -91,18 +98,17 @@ gulp.task('serve', function() {
       baseDir: "./"
     }
   });
-  //gulp.task('watch', function () {
-  //    gulp.watch([config.src], ['jsBuild']);
-  //});
   gulp.watch([config.src], ['jsBuild']);
   gulp.watch(['bower.json'], ['bowerBuild']);
   gulp.watch(['*.html'], ['htmlBuild']);
 });
 
 gulp.task('watch', function () {
+    livereload.listen();
     gulp.watch(['./wwwroot/js/*.js', './wwwroot/css/*.scss'], function (event) {
         if (event.type === 'changed') {
             gulp.start('build');
+            gulp.start('reload');
         }
     });
 });
