@@ -75,7 +75,7 @@ namespace OneStop.Controllers
             var request = new RestRequest("/businesses/search", Method.GET);
             request.AddParameter("term", "restaurant");
             request.AddParameter("location", place);
-            request.AddHeader("Authorization", "Bearer Ao9wyNEJi_JdysZZ2BQGr0sG2CgKnj1Pe3QEEjbSa6__mbKWQYitQne4wAJAmWamYagq7-P-4iZb4mzAH6ZIs_bjomtWwuU4XeFck6RhJmuQihOFdWMZqGIWhAUSWXYx");
+            request.AddHeader("Authorization", "Bearer " + env.YelpToken);
             var response = new RestResponse();
             Task.Run(async () =>
             {
@@ -94,7 +94,7 @@ namespace OneStop.Controllers
             var request = new RestRequest("/businesses/search", Method.GET);
             request.AddParameter("term", "hotel");
             request.AddParameter("location", place);
-            request.AddHeader("Authorization", "Bearer Ao9wyNEJi_JdysZZ2BQGr0sG2CgKnj1Pe3QEEjbSa6__mbKWQYitQne4wAJAmWamYagq7-P-4iZb4mzAH6ZIs_bjomtWwuU4XeFck6RhJmuQihOFdWMZqGIWhAUSWXYx");
+            request.AddHeader("Authorization", "Bearer " + env.YelpToken);
             var response = new RestResponse();
             Task.Run(async () =>
             {
@@ -109,8 +109,9 @@ namespace OneStop.Controllers
         [HttpPost]
         public IActionResult Weather(string place)
         {
-            var client = new RestClient("http://api.openweathermap.org/data/2.5");
-            var request = new RestRequest(place, Method.GET);
+            var client = new RestClient("http://api.openweathermap.org/data/2.5/");
+            var request = new RestRequest("forecast?q=" + place, Method.GET);
+            request.AddParameter("appid", env.apiWeatherKey);
             var response = new RestResponse();
             Task.Run(async () =>
             {

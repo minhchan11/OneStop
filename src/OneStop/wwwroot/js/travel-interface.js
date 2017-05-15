@@ -4,8 +4,7 @@ $(document).ready(function () {
     $("#customer").submit(function (event) {
         event.preventDefault();
         $("#hide").removeClass("hidden");
-        $("#weather").text("");
-        $("#budgetConvert").text("");
+        $("#weather, #budgetConvert, #restaurant, #hotel").text("");
         newTravel.place = $("#destination").val().replace(" ", "_").toLowerCase();
         newTravel.getInfo();
         var newBudget = parseFloat($("#budget").val());
