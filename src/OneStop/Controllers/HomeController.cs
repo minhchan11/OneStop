@@ -159,6 +159,50 @@ namespace OneStop.Controllers
             return Json(jsonResponse);
         }
 
+        [HttpPost]
+        public IActionResult Attractions(string latitude, string longitude)
+        {
+            var client = new RestClient("https://places.demo.api.here.com/places/v1/discover/here?");
+            var request = new RestRequest(Method.GET);
+            string location = latitude + ',' + longitude;
+            request.AddParameter("at", location);
+            request.AddParameter("app_id", env.HereKey);
+            request.AddParameter("app_code", env.HereSecret);
+            request.AddParameter("gen", "8");
+            var response = new RestResponse();
+            Task.Run(async () =>
+            {
+                response = await GetResponseContentAsync(client, request) as RestResponse;
+            }).Wait();
+
+            JObject jsonResponse = JsonConvert.DeserializeObject<JObject>(response.Content);
+
+            return Json(jsonResponse);
+        }
+
+        [HttpPost]
+        public IActionResult Airport(string latitude, string longitude)
+        {
+            var client = new RestClient("https://places.cit.api.here.com/places/v1/discover/around");
+            var request = new RestRequest(Method.GET);
+            string location = latitude + ',' + longitude;
+            request.AddParameter("at", location);
+            request.AddParameter("app_id", env.HereKey);
+            request.AddParameter("app_code", env.HereSecret);
+            request.AddParameter("cat", "airport");
+            request.AddParameter("gen", "8");
+            var response = new RestResponse();
+            Task.Run(async () =>
+            {
+                response = await GetResponseContentAsync(client, request) as RestResponse;
+            }).Wait();
+
+            JObject jsonResponse = JsonConvert.DeserializeObject<JObject>(response.Content);
+
+            return Json(jsonResponse);
+        }
+
+
         public static Task<IRestResponse> GetResponseContentAsync(RestClient theClient, RestRequest theRequest)
         {
             var tcs = new TaskCompletionSource<IRestResponse>();

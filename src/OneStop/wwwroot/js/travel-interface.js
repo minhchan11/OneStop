@@ -6,19 +6,11 @@ $(document).ready(function () {
         $("#hide").removeClass("hidden");
         $("#weather, #budgetConvert, #restaurant, #hotel").text("");
         newTravel.place = $("#destination").val().replace(" ", "_").toLowerCase();
-        newTravel.getInfo();
+        newTravel.getWiki();
         var newBudget = parseFloat($("#budget").val());
-        var newPosition = newTravel.getCoordinate(newBudget);
+        var newPosition = newTravel.getInfo(newBudget);
         newTravel.getRestaurants();
         newTravel.getHotels();
         newTravel.getWeather();
-        //setTimeout(function () {
-        //    newTravel.getAttractions(newPosition[0], newPosition[1]);
-        //}, 50);
-        //setTimeout(function () {
-        //    newTravel.getAirport(newPosition[0], newPosition[1]);
-        //}, 60);
-
-
     });
 });

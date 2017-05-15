@@ -2,7 +2,7 @@
     this.place = "";
 }
 
-Travel.prototype.getInfo = function () {
+Travel.prototype.getWiki = function () {
     $.ajax({
         url: "Home/Wiki",
         type: 'POST',
@@ -20,7 +20,7 @@ Travel.prototype.getInfo = function () {
     });
 };
 
-Travel.prototype.getCoordinate = function (budget) {
+Travel.prototype.getInfo = function (budget) {
     var position = [];
     $.ajax({
         url: "Home/Coord",
@@ -28,26 +28,16 @@ Travel.prototype.getCoordinate = function (budget) {
         dataType: "json",
         data: { place: this.place },
         success: function (response) {
+            console.log(response);
             position.push(response.Response.View[0].Result[0].Location.DisplayPosition.Latitude);
             position.push(response.Response.View[0].Result[0].Location.DisplayPosition.Longitude);
             position.push(response.Response.View[0].Result[0].Location.Address.Country.toLowerCase());
+            position.push(response.Response.View[0].Result[0].Location.Address.PostalCode);
         }
     }).then(function () {
-        $.ajax({
-            url: "Home/CurrencyCode",
-            type: 'POST',
-            dataType: "json",
-            data: { countryCode: position[2] },
-            success: function (response) {
-                console.log(response);
-                var currency = response.currencies[0].code;
-                console.log(currency);
-                $('#currency').text(currency);
-                if (currency !== "USD") {
-                    getExchange(currency, budget);
-                }
-            }
-        });
+        getCurrency(position[2], budget);
+        getAttractions(position[0], position[1]);
+        getAirport(position[0], position[1]);
     });
     return position;
 };
@@ -62,7 +52,7 @@ Travel.prototype.getRestaurants= function () {
             var restaurants = response['businesses'];
             restaurants.forEach(function (item) {
                 $("#restaurant").append("<div class='col-md-1 newRes'>" + "<img class='pics' src=" + item.image_url + ">" + "<br>" + "<a href=" + item.url + ">" + item.name + "</a>" + "<br>" + "<p>" + item.rating + "&#9733" + "</p>" + "</div>");
-            });   
+            });
         }
     });
 };
@@ -100,6 +90,21 @@ Travel.prototype.getWeather = function () {
         }
     });
 };
+var getCurrency = function (countryCode, budget) {
+    $.ajax({
+        url: "Home/CurrencyCode",
+        type: 'POST',
+        dataType: "json",
+        data: { countryCode: countryCode },
+        success: function (response) {
+            var currency = response.currencies[0].code;
+            $('#currency').text(currency);
+            if (currency !== "USD") {
+                getExchange(currency, budget);
+            }
+        }
+    });
+};
 
 var getExchange = function (foreign, budget) {
     $.ajax({
@@ -110,12 +115,34 @@ var getExchange = function (foreign, budget) {
         success: function (response) {
             var temp = response.quotes;
             var rate = temp[Object.keys(temp)[1]];
-            console.log(budget);
-            console.log(rate * budget);
             $("#rate").text(rate.toString());
             $("#convert").text(parseFloat(rate * budget).toFixed(2));
         }
     });
 };
 
+var getAttractions = function (lat, long) {
+    $.ajax({
+        url: "Home/Attractions",
+        type: 'POST',
+        dataType: "json",
+        data: { latitude: lat, longitude : long },
+        success: function (response) {
+            var attractions = response.results.items;
+            attractions.forEach(function(item){
+                $('#attractions ul').append('<li>' + item.title + '</li>')});
+            }
+    });
+}
+var getAirport = function (lat, long) {
+    $.ajax({
+        url: "Home/Airport",
+        type: 'POST',
+        dataType: "json",
+        data: { latitude: lat, longitude: long },
+        success: function (response) {
+            console.log(response);
+        }
+    });
+}
 exports.travelObject = Travel;
