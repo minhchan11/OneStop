@@ -214,5 +214,15 @@ namespace OneStop.Controllers
             return tcs.Task;
         }
 
+
+        //Save to databases actions
+        [HttpPost]
+        public IActionResult SaveAttractions(string attractionName)
+        {
+            Attraction newAttraction = new Attraction(attractionName);
+            
+            return Json(jsonResponse);
+        }
+
     }
 }

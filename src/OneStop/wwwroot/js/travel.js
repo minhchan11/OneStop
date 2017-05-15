@@ -130,7 +130,8 @@ var getAttractions = function (lat, long) {
         success: function (response) {
             var attractions = response.results.items;
             attractions.forEach(function(item){
-                $('#attractions ul').append('<li>' + item.title + '</li>')});
+                $('#attractions ul').append('<li>' + '<form action="SaveAttractions">'  + '<input type="hidden" name="attractionName" value="item.title"/>'+ item.title + '<button type="submit" value="Save this attraction" class="btn btn-success">Claim</button>' + '</form>' +'</li>')
+            });
             }
     });
 }
