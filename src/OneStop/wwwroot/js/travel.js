@@ -30,20 +30,24 @@ Travel.prototype.getCoordinate = function (budget) {
         success: function (response) {
             position.push(response.Response.View[0].Result[0].Location.DisplayPosition.Latitude);
             position.push(response.Response.View[0].Result[0].Location.DisplayPosition.Longitude);
-            position.push((response.Response.View[0].Result[0].Location.Address.Country).toLowerCase());
+            position.push(response.Response.View[0].Result[0].Location.Address.Country.toLowerCase());
         }
     }).then(function () {
-        $.get('https://restcountries.eu/rest/v2/alpha/' + position[2]
-            ).then(function (response) {
+        $.ajax({
+            url: "Home/CurrencyCode",
+            type: 'POST',
+            dataType: "json",
+            data: { countryCode: position[2] },
+            success: function (response) {
+                console.log(response);
                 var currency = response.currencies[0].code;
-                $('#currency').text(response.currencies[0].code);
+                console.log(currency);
+                $('#currency').text(currency);
                 if (currency !== "USD") {
-                            
-                            getExchange(currency, budget);
-                        }
-            }).fail(function (error) {
-     console.log("error");
-            });
+                    getExchange(currency, budget);
+                }
+            }
+        });
     });
     return position;
 };
@@ -98,27 +102,20 @@ Travel.prototype.getWeather = function () {
 };
 
 var getExchange = function (foreign, budget) {
-    $.get('http://apilayer.net/api/live?access_key=c1d45abfb88ffc2ee4ed5b834aa96c6f' + '&currencies=USD,' + foreign + '&format=1'
-    ).then(function (response) {
-        var temp = response.quotes;
-        var rate = temp[Object.keys(temp)[1]];
-        console.log(budget);
-        console.log(rate * budget);
-        $("#rate").text(rate.toString());
-        $("#convert").text(parseFloat(rate * budget).toFixed(2));
-    }).fail(function (error) {
-        console.log("error");
+    $.ajax({
+        url: "Home/Exchange",
+        type: 'POST',
+        dataType: "json",
+        data: { currencyCode: foreign },
+        success: function (response) {
+            var temp = response.quotes;
+            var rate = temp[Object.keys(temp)[1]];
+            console.log(budget);
+            console.log(rate * budget);
+            $("#rate").text(rate.toString());
+            $("#convert").text(parseFloat(rate * budget).toFixed(2));
+        }
     });
 };
-
-//Travel.prototype.getCurrencyCode = function (country) {
-//    $.get('https://restcountries.eu/rest/v2/alpha/' + country
-//  ).then(function (response) {
-//      console.log(response);
-//      currency = response.currencies[0].code;
-//  }).fail(function (error) {
-//      console.log("error");
-//  });
-//};
 
 exports.travelObject = Travel;

@@ -110,9 +110,7 @@ namespace OneStop.Controllers
         public IActionResult Weather(string place)
         {
             var client = new RestClient("http://api.openweathermap.org/data/2.5");
-            var request = new RestRequest("/forecast", Method.GET);
-            request.AddParameter("q", place);
-            request.AddParameter("appid", env.apiWeatherKey);
+            var request = new RestRequest(place, Method.GET);
             var response = new RestResponse();
             Task.Run(async () =>
             {
@@ -124,6 +122,41 @@ namespace OneStop.Controllers
             return Json(jsonResponse);
         }
 
+        [HttpPost]
+        public IActionResult CurrencyCode(string countryCode)
+        {
+            var client = new RestClient("https://restcountries.eu/rest/v2/alpha/" + countryCode);
+            var request = new RestRequest(Method.GET);
+            var response = new RestResponse();
+            Task.Run(async () =>
+            {
+                response = await GetResponseContentAsync(client, request) as RestResponse;
+            }).Wait();
+
+            JObject jsonResponse = JsonConvert.DeserializeObject<JObject>(response.Content);
+
+            return Json(jsonResponse);
+        }
+
+
+        [HttpPost]
+        public IActionResult Exchange(string currencyCode)
+        {
+            var client = new RestClient("http://apilayer.net/api/live?");
+            var request = new RestRequest(Method.GET);
+            request.AddParameter("access_key", env.currencyKey);
+            request.AddParameter("currencies", "USD," + currencyCode);
+            request.AddParameter("format", "1");
+            var response = new RestResponse();
+            Task.Run(async () =>
+            {
+                response = await GetResponseContentAsync(client, request) as RestResponse;
+            }).Wait();
+
+            JObject jsonResponse = JsonConvert.DeserializeObject<JObject>(response.Content);
+
+            return Json(jsonResponse);
+        }
 
         public static Task<IRestResponse> GetResponseContentAsync(RestClient theClient, RestRequest theRequest)
         {

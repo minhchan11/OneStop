@@ -4,7 +4,6 @@ $(document).ready(function () {
     $("#customer").submit(function (event) {
         event.preventDefault();
         $("#hide").removeClass("hidden");
-        $('span[class=details]').text("");
         $("#weather").text("");
         $("#budgetConvert").text("");
         newTravel.place = $("#destination").val().replace(" ", "_").toLowerCase();
