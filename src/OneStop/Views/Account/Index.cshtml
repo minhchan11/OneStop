@@ -24,6 +24,7 @@
                 var imgsrc = string.Format("data:image/jpg;base64,{0}", base64);
                 <img src="@imgsrc" class="profilePic"/>
                 <button class="btn btn-info">@Html.ActionLink("Edit your profile", "Edit", new { id = Model.TouristId } )</button>
+                <button class="btn btn-warning">@Html.ActionLink("Delete your profile", "Delete", new { id = Model.TouristId })</button>
             }
         </div>
     </div>

@@ -120,12 +120,73 @@ namespace OneStop.Controllers
             return RedirectToAction("Index");
         }
 
+        public IActionResult Delete(int id)
+        {
+            var deleteTourist = _db.Tourists.FirstOrDefault(tourists => tourists.TouristId == id);
+            return View(deleteTourist);
+        }
+
+        [HttpPost, ActionName ("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+
+            var deleteTourist = _db.Tourists.FirstOrDefault(tourists => tourists.TouristId == id);
+            var user = await _userManager.FindByNameAsync(deleteTourist.UserName);
+
+                var results = await _userManager.DeleteAsync(user);
+
+                if (results.Succeeded)
+                    {
+                    await _signInManager.SignOutAsync();
+                    _db.Tourists.Remove(deleteTourist);
+                    _db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                else
+                  {
+                return View(deleteTourist);
+            }
+        }
+
         private byte[] ConvertToBytes(IFormFile image)
         {
             byte[] CoverImageBytes = null;
             BinaryReader reader = new BinaryReader(image.OpenReadStream());
             CoverImageBytes = reader.ReadBytes((int)image.Length);
             return CoverImageBytes;
+        }
+
+        public static async Task<IdentityResult> DeleteUserAccount(UserManager<ApplicationUser> userManager,
+                                                                        string userEmail, ApplicationDbContext context)
+        {
+            IdentityResult rc = new IdentityResult();
+
+            if ((userManager != null) && (userEmail != null) && (context != null))
+            {
+                var user = await userManager.FindByEmailAsync(userEmail);
+                var logins = user.Logins;
+                var rolesForUser = await userManager.GetRolesAsync(user);
+
+                using (var transaction = context.Database.BeginTransaction())
+                {
+                    foreach (var login in logins.ToList())
+                    {
+                        await userManager.RemoveLoginAsync(user, login.LoginProvider, login.ProviderKey);
+                    }
+
+                    if (rolesForUser.Count() > 0)
+                    {
+                        foreach (var item in rolesForUser.ToList())
+                        {
+                            var result = await userManager.RemoveFromRoleAsync(user, item);
+                        }
+                    }
+                    rc = await userManager.DeleteAsync(user);
+                    transaction.Commit();
+                }
+            }
+            return rc;
         }
     }
 }
