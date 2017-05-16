@@ -129,8 +129,10 @@ var getAttractions = function (lat, long) {
         data: { latitude: lat, longitude : long },
         success: function (response) {
             var attractions = response.results.items;
-            attractions.forEach(function(item){
-                $('#attractions ul').append('<li>' + '<form id="' + 'saveAttractions' + attractions.indexOf(item) + '">' + '<input type="hidden" name="attractionName" value=' + item.title.toString() + '/>' + item.title + '<button type="submit" class="btn btn-success">Save</button>' + '</form>' + '</li>')
+            attractions.forEach(function (item) {
+                var itemValue = item.title.toString() + "";
+                console.log(itemValue);
+                $('#attractions ul').append('<li>' + '<form id="' + 'saveAttractions' + attractions.indexOf(item) + '">' + '<input type="hidden" name="attractionName" value=' + itemValue + '/>' + item.title + '<button type="submit" class="btn btn-success">Save</button>' + '</form>' + '</li>')
             });
             $("[id^=saveAttractions]").on("submit", function (event) {
                 event.preventDefault();
