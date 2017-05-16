@@ -14,6 +14,12 @@ namespace OneStop.Controllers
 {
     public class HomeController : Controller
     {
+        public ApplicationDbContext _db;
+
+        public HomeController(ApplicationDbContext db)
+        {
+            _db = db;
+        }
         // GET: /<controller>/
         public IActionResult Index()
         {
@@ -220,8 +226,9 @@ namespace OneStop.Controllers
         public IActionResult SaveAttractions(string attractionName)
         {
             Attraction newAttraction = new Attraction(attractionName);
-            
-            return Json(jsonResponse);
+            _db.Attractions.Add(newAttraction);
+            _db.SaveChanges();
+            return Json(newAttraction);
         }
 
     }

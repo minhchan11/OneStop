@@ -130,7 +130,19 @@ var getAttractions = function (lat, long) {
         success: function (response) {
             var attractions = response.results.items;
             attractions.forEach(function(item){
-                $('#attractions ul').append('<li>' + '<form action="SaveAttractions">'  + '<input type="hidden" name="attractionName" value="item.title"/>'+ item.title + '<button type="submit" value="Save this attraction" class="btn btn-success">Claim</button>' + '</form>' +'</li>')
+                $('#attractions ul').append('<li>' + '<form id="' + 'saveAttractions' + attractions.indexOf(item) + '">' + '<input type="hidden" name="attractionName" value=' + item.title.toString() + '/>' + item.title + '<button type="submit" class="btn btn-success">Save</button>' + '</form>' + '</li>')
+            });
+            $("[id^=saveAttractions]").on("submit", function (event) {
+                event.preventDefault();
+                $.ajax({
+                    url: "Home/SaveAttractions",
+                    type: 'POST',
+                    dataType: "json",
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        console.log(response);
+                    }
+                });
             });
             }
     });

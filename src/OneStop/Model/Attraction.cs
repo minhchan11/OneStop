@@ -14,5 +14,10 @@ namespace OneStop.Model
         public int Id { get; set; }
         public string Name { get; set; }
         public virtual ApplicationUser User { get; set; }
+
+        public Attraction(string Name)
+        {
+            this.Name = Name;
+        }
     }
 }
