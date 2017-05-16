@@ -14,10 +14,5 @@ namespace OneStop.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public virtual Tourist Tourist { get; set; }
-
-        public Attraction(string name)
-        {
-            this.Name = name;
-        }
     }
 }

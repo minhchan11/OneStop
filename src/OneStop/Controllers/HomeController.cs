@@ -227,7 +227,9 @@ namespace OneStop.Controllers
         [HttpPost]
         public IActionResult SaveAttractions(string attractionName)
         {
-            Attraction newAttraction = new Attraction(attractionName);
+            Attraction newAttraction = new Attraction();
+            newAttraction.Name = attractionName;
+            newAttraction.Tourist = _db.Tourists.FirstOrDefault(i => i.UserName == User.Identity.Name);
             _db.Attractions.Add(newAttraction);
             _db.SaveChanges();
             return Json(newAttraction);

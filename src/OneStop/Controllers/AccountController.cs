@@ -9,6 +9,7 @@ using System.Security.Claims;
 using OneStop.Models;
 using OneStop.ViewModels;
 using System.IO;
+using Microsoft.EntityFrameworkCore;
 
 namespace OneStop.Controllers
 {
@@ -29,7 +30,7 @@ namespace OneStop.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                var thisTourist = _db.Tourists.FirstOrDefault(item => item.UserName == User.Identity.Name);
+                var thisTourist = _db.Tourists.Include(tourists => tourists.Attractions).FirstOrDefault(item => item.UserName == User.Identity.Name);
                 return View(thisTourist);
             }
             else
