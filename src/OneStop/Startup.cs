@@ -52,7 +52,7 @@ namespace OneStop
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Account}/{action=Index}/{id?}");
+                    template: "{controller=Intro}/{action=Index}/{id?}");
             });
            
             //JS and CSS files

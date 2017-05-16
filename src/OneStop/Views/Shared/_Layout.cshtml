@@ -16,9 +16,12 @@
                 <a class="navbar-brand">Travel App</a>
             </div>
             <ul class="nav navbar-nav navbar-right">
-                <li>@Html.ActionLink("Admin Page", "Index", "Account")</li>
+                <li>@Html.ActionLink("Profile", "Index", "Account")</li>
                 <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                <li>@Html.ActionLink("Subscribe", "Mail", "Home")</li>
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <li>@Html.ActionLink("Roles", "Index", "Roles")</li>
+                }
             </ul>
         </div>
     </nav>
