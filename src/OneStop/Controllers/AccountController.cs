@@ -106,7 +106,6 @@ namespace OneStop.Controllers
         private byte[] ConvertToBytes(IFormFile image)
         {
             byte[] CoverImageBytes = null;
-
             BinaryReader reader = new BinaryReader(image.OpenReadStream());
             CoverImageBytes = reader.ReadBytes((int)image.Length);
             return CoverImageBytes;

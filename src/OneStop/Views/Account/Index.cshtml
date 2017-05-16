@@ -18,6 +18,11 @@
             }
             else
             {
+                <h5>Name: @Model.Name</h5>
+                var bytes = Model.Pic;
+                var base64 = Convert.ToBase64String(bytes);
+                var imgsrc = string.Format("data:image/jpg;base64,{0}", base64);
+                <img src="@imgsrc" />
                 <button class="btn btn-info">@Html.ActionLink("Edit your profile", "Edit")</button>
             }
         </div>
