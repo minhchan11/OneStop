@@ -96,9 +96,26 @@ namespace OneStop.Controllers
         public IActionResult Create(Tourist tourist, IFormFile avatar)
         {
             tourist.UserName = User.Identity.Name;
-            byte[] m_bytes = ConvertToBytes(avatar);
-            tourist.Pic = m_bytes;
+            byte[] profilePic = ConvertToBytes(avatar);
+            tourist.Pic = profilePic;
             _db.Tourists.Add(tourist);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        public IActionResult Edit(int id)
+        {
+            var editedTourist = _db.Tourists.FirstOrDefault(tourists => tourists.TouristId == id);
+            return View(editedTourist);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Tourist tourist, IFormFile avatar)
+        {
+            var editedTourist = _db.Tourists.FirstOrDefault(tourists => tourists.TouristId == tourist.TouristId);
+            _db.Tourists.Attach(editedTourist);
+            byte[] profilePic = ConvertToBytes(avatar);
+            editedTourist.Name = tourist.Name;
+            editedTourist.Pic = profilePic;
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
