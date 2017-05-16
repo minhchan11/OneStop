@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using OneStop.Model;
+using OneStop.Models;
 
 namespace OneStop
 {
@@ -39,19 +39,23 @@ namespace OneStop
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            //Important for authorization
+            app.UseIdentity();
             loggerFactory.AddConsole();
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            //Router
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Account}/{action=Index}/{id?}");
             });
+           
+            //JS and CSS files
             app.UseStaticFiles();
             app.Run(async (context) =>
             {

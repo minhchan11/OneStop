@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using OneStop.Model;
+using OneStop.Models;
 
 namespace OneStop.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170516022157_Initial")]
+    [Migration("20170516171651_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -124,7 +124,7 @@ namespace OneStop.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("OneStop.Model.ApplicationUser", b =>
+            modelBuilder.Entity("OneStop.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
@@ -174,20 +174,36 @@ namespace OneStop.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("OneStop.Model.Attraction", b =>
+            modelBuilder.Entity("OneStop.Models.Attraction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Name");
 
-                    b.Property<string>("UserId");
+                    b.Property<int?>("TouristId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("TouristId");
 
                     b.ToTable("Attractions");
+                });
+
+            modelBuilder.Entity("OneStop.Models.Tourist", b =>
+                {
+                    b.Property<int>("TouristId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.Property<byte[]>("Pic");
+
+                    b.Property<string>("UserName");
+
+                    b.HasKey("TouristId");
+
+                    b.ToTable("Tourists");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>
@@ -200,7 +216,7 @@ namespace OneStop.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("OneStop.Model.ApplicationUser")
+                    b.HasOne("OneStop.Models.ApplicationUser")
                         .WithMany("Claims")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -208,7 +224,7 @@ namespace OneStop.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("OneStop.Model.ApplicationUser")
+                    b.HasOne("OneStop.Models.ApplicationUser")
                         .WithMany("Logins")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -221,17 +237,17 @@ namespace OneStop.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("OneStop.Model.ApplicationUser")
+                    b.HasOne("OneStop.Models.ApplicationUser")
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("OneStop.Model.Attraction", b =>
+            modelBuilder.Entity("OneStop.Models.Attraction", b =>
                 {
-                    b.HasOne("OneStop.Model.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                    b.HasOne("OneStop.Models.Tourist", "Tourist")
+                        .WithMany("Attractions")
+                        .HasForeignKey("TouristId");
                 });
         }
     }

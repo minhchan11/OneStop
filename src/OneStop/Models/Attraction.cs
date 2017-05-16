@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OneStop.Model
+namespace OneStop.Models
 {
     [Table("Attractions")]
     public class Attraction
@@ -13,11 +13,11 @@ namespace OneStop.Model
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-        public virtual ApplicationUser User { get; set; }
+        public virtual Tourist Tourist { get; set; }
 
-        public Attraction(string Name)
+        public Attraction(string name)
         {
-            this.Name = Name;
+            this.Name = name;
         }
     }
 }

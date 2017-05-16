@@ -11194,7 +11194,8 @@
       "Microsoft.Extensions.Logging.Console >= 1.0.0",
       "Microsoft.NETCore.App >= 1.0.1",
       "Newtonsoft.Json >= 10.0.2",
-      "RestSharp.NetCore >= 105.2.3"
+      "RestSharp.NetCore >= 105.2.3",
+      "System.ComponentModel.Annotations >= 4.3.0"
     ],
     ".NETCoreApp,Version=v1.0": []
   },

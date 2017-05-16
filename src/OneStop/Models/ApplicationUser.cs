@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace OneStop.Model
+namespace OneStop.Models
 {
     public class ApplicationUser : IdentityUser
     {

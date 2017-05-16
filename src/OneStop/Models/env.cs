@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OneStop.Model
+namespace OneStop.Models
 {
     public static class env
     {

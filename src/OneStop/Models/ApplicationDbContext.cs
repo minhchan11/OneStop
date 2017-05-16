@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace OneStop.Model
+namespace OneStop.Models
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
@@ -14,6 +14,7 @@ namespace OneStop.Model
         }
 
         public virtual DbSet<Attraction> Attractions { get; set; }
+        public virtual DbSet<Tourist> Tourists { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {

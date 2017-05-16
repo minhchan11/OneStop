@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Account Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model OneStop.Models.Tourist
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="panel panel-success">
+        <div class="panel-heading">User Tools for @User.Identity.Name</div>
+        <div class="panel-body">
+            @using (Html.BeginForm("Logoff", "Account"))
+            {
+                <input type="submit" class="btn btn-primary" value="Log off" />
+            }
+            @if (Model == null)
+            {
+                <button class="btn btn-info">@Html.ActionLink("Complete your profile", "Create")</button>
+            }
+            else
+            {
+                <button class="btn btn-info">@Html.ActionLink("Edit your profile", "Edit")</button>
+            }
+        </div>
+    </div>
+}
+else
+{
+<a class="btn btn-info" href="account/register">Register</a>
+<a class="btn btn-success" href="account/login">Log In</a>
+}

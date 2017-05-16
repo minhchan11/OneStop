@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OneStop.ViewModel
+namespace OneStop.ViewModels
 {
     public class RegisterViewModel
     {

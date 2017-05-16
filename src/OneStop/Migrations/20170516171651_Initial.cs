@@ -63,6 +63,21 @@ namespace OneStop.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Tourists",
+                columns: table => new
+                {
+                    TouristId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: true),
+                    Pic = table.Column<byte[]>(nullable: true),
+                    UserName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tourists", x => x.TouristId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -155,16 +170,16 @@ namespace OneStop.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: true)
+                    TouristId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Attractions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Attractions_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        name: "FK_Attractions_Tourists_TouristId",
+                        column: x => x.TouristId,
+                        principalTable: "Tourists",
+                        principalColumn: "TouristId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -206,9 +221,9 @@ namespace OneStop.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attractions_UserId",
+                name: "IX_Attractions_TouristId",
                 table: "Attractions",
-                column: "UserId");
+                column: "TouristId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -236,6 +251,9 @@ namespace OneStop.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Tourists");
         }
     }
 }

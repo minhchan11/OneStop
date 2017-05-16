@@ -1,4 +1,4 @@
-﻿{
+{
   "dependencies": {
     "Microsoft.NETCore.App": {
       "version": "1.0.1",
@@ -21,7 +21,8 @@
     "Microsoft.EntityFrameworkCore.Tools": {
       "version": "1.0.0-preview2-final",
       "type": "build"
-    }
+    },
+    "System.ComponentModel.Annotations": "4.3.0"
   },
 
   "tools": {
