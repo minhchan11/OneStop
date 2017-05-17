@@ -8,7 +8,7 @@ using OneStop.Models;
 namespace OneStop.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170516171651_Initial")]
+    [Migration("20170517213711_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -133,6 +133,8 @@ namespace OneStop.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
+
+                    b.Property<bool>("ConfirmedEmail");
 
                     b.Property<string>("Email")
                         .HasAnnotation("MaxLength", 256);

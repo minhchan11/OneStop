@@ -133,6 +133,8 @@ namespace OneStop.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
+                    b.Property<bool>("ConfirmedEmail");
+
                     b.Property<string>("Email")
                         .HasAnnotation("MaxLength", 256);
 

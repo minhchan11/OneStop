@@ -8,5 +8,6 @@ namespace OneStop.Models
 {
     public class ApplicationUser : IdentityUser
     {
+        public bool ConfirmedEmail { get; set; }
     }
 }

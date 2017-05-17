@@ -16,15 +16,19 @@
         <div class="form-group">
             @using (Html.BeginForm("Register", "Account", FormMethod.Post))
             {
-                <label>Email</label>
-                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                <label>User Name:</label>
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
                 <label>Password</label>
                 @Html.TextBoxFor(m => m.Password, new { @class = "form-control", @type = "password" })
                 <label>Confirm Password</label>
                 @Html.TextBoxFor(m => m.ConfirmPassword, new { @class = "form-control", @type = "password" })
+                <label>Email</label>
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
                 <br />
                 <input type="submit" value="Register" class="btn btn-success" />
             }
         </div>
     </div>
 </div>
+
+<a href=""></a>

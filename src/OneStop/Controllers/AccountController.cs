@@ -10,6 +10,11 @@ using OneStop.Models;
 using OneStop.ViewModels;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using MimeKit;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using System.Threading;
 
 namespace OneStop.Controllers
 {
@@ -47,17 +52,70 @@ namespace OneStop.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            var user = new ApplicationUser { UserName = model.Email };
+            var user = new ApplicationUser { UserName = model.UserName };
+            user.Email = model.Email;
+            user.ConfirmedEmail = false;
             IdentityResult result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
-                return RedirectToAction("Index");
+                var emailMessage = new MimeMessage();
+        
+
+                emailMessage.From.Add(new MailboxAddress("Obviously It's Minh", "Hallo@example.com"));
+                emailMessage.To.Add(new MailboxAddress(model.UserName, user.Email));
+                emailMessage.Subject = "Email confirmation";
+                emailMessage.Body = new TextPart("plain")
+                {
+                    Text = string.Format("Dear {0} <br/> Thank you for your registration, please click on the below link to complete your registration: <a href='http://localhost:50365/{1}'>Click here</a>",
+                model.UserName, Url.Action("ConfirmEmail", "Account",new { Token = user.Id, Email = user.Email }))
+                };
+
+                using (var client = new SmtpClient())
+                {
+                    client.Connect("smtp.gmail.com", 465, SecureSocketOptions.SslOnConnect);
+                    client.Authenticate("mikejung107@gmail.com", "Cupcake12#");
+                    await client.SendAsync(emailMessage).ConfigureAwait(false);
+                    await client.DisconnectAsync(true).ConfigureAwait(false);
+                };
+                return RedirectToAction("Confirm", "Account", new { Email = user.Email });
             }
             else
             {
                ViewBag.Error = "Please re-enter your credentials";
                 return View();
             }
+        }
+
+
+        // GET: /Account/ConfirmEmail
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string Token, string Email)
+        {
+            ApplicationUser user = await _userManager.FindByIdAsync(Token);
+            if (user != null)
+            {
+                if (user.Email == Email)
+                {
+                    user.ConfirmedEmail = true;
+                    await _userManager.UpdateAsync(user);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("Index", "Home", new { ConfirmedEmail = user.Email });
+                }
+                else
+                {
+                    return RedirectToAction("Confirm", "Account", new { Email = user.Email });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Confirm", "Account", new { Email = "" });
+            }
+        }
+
+        [AllowAnonymous]
+        public ActionResult Confirm(string Email)
+        {
+            ViewBag.Email = Email; return View();
         }
 
         public IActionResult Login()
@@ -68,18 +126,29 @@ namespace OneStop.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-   
-            Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: true, lockoutOnFailure: false);
-            if (result.Succeeded)
+            var user = await _userManager.FindByNameAsync(model.Username);
+            if (user != null)
             {
-                return RedirectToAction("Index");
+                if (user.ConfirmedEmail == true)
+                {
+                    Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, isPersistent: true, lockoutOnFailure: false);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        ViewBag.Error = "No match for username and password";
+                        return View();
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Confirm Email Address.");
+                }
             }
-            else
-            {
-                ViewBag.Error = "No match for username and password";
-                return View();
+                return View(model);
             }
-        }
 
         [HttpPost]
         public async Task<IActionResult> LogOff()
