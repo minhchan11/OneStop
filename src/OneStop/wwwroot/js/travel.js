@@ -150,14 +150,44 @@ var getAttractions = function (lat, long) {
     });
 }
 var getAirport = function (lat, long) {
-    $.ajax({
-        url: "Home/Airport",
-        type: 'POST',
-        dataType: "json",
-        data: { latitude: lat, longitude: long },
-        success: function (response) {
-            console.log(response);
-        }
-    });
+    //$.ajax({
+    //    url: "Home/Airport",
+    //    type: 'POST',
+    //    dataType: "json",
+    //    data: { latitude: lat, longitude: long },
+    //    success: function (response) {
+    //        console.log(response);
+    //    }
+    //}).then(function () {
+     
+
+
+    //});
+    var request = 
+  {
+      "request": {
+          "passengers": {
+              "adultCount": 1
+          },
+          "slice": [
+           {
+               "origin": "SEA",
+               "destination": "LAX",
+               "date": "2017-6-30"
+           }
+          ]
+      }
+  }
+
+ 
+$.ajax({
+    url: "Home/Flights",
+    type: 'POST',
+    dataType   : 'json',
+    data: { queries: "{\"request\":{\"passengers\":{\"adultCount\":1}\"slice\":[{\"origin\":\"SEA\"\"destination\":\"LAX\"\"date\":\"2017-6-30\"}]}}" },
+    success: function (response) {
+        console.log(response);
+    }
+});
 }
 exports.travelObject = Travel;

@@ -210,6 +210,37 @@ namespace OneStop.Controllers
             return Json(jsonResponse);
         }
 
+        [HttpPost]
+        public IActionResult Flights(string queries)
+        {
+            var client = new RestClient("https://www.googleapis.com/qpxExpress/v1/trips/search?key=AIzaSyBIo1tB-n0yvzIBBaMubegAa52S-9uvnKY");
+            var request = new RestRequest(Method.POST);
+            var newPassenger = new Passengers() { adultCount = 1 };
+            var newSlouse = new Slouse() { origin = "SEA", destination = "LAX", date = "2017-6-30" };
+            var newRequest = new Request()
+            {
+                passengers = newPassenger,
+                slice = new List<Slouse>() { newSlouse }
+            };
+            var newRootObject = new RootObject()
+            {
+                request = newRequest
+            };
+            request.AddHeader("Accept", "application/json");
+            request.Parameters.Clear();
+            request.RequestFormat = DataFormat.Json;
+            request.AddJsonBody(newRootObject);
+            var response = new RestResponse();
+            Task.Run(async () =>
+            {
+                response = await GetResponseContentAsync(client, request) as RestResponse;
+            }).Wait();
+
+            JObject jsonResponse = JsonConvert.DeserializeObject<JObject>(response.Content);
+
+            return Json(jsonResponse);
+        }
+
 
         public static Task<IRestResponse> GetResponseContentAsync(RestClient theClient, RestRequest theRequest)
         {
@@ -234,6 +265,29 @@ namespace OneStop.Controllers
             _db.SaveChanges();
             return Json(newAttraction);
         }
+   
+    }
 
+    public class Passengers
+    {
+        public int adultCount { get; set; }
+    }
+
+    public class Slouse
+    {
+        public string origin { get; set; }
+        public string destination { get; set; }
+        public string date { get; set; }
+    }
+
+    public class Request
+    {
+        public Passengers passengers { get; set; }
+        public List<Slouse> slice { get; set; }
+    }
+
+    public class RootObject
+    {
+        public Request request { get; set; }
     }
 }
