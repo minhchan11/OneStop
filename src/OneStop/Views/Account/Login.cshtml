@@ -3,8 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@using OneStop.ViewModels
-@model LoginViewModel
+@model OneStop.ViewModels.LoginViewModel
 
 @if (ViewData["error"] != null)
 {
@@ -19,7 +18,7 @@
             @using (Html.BeginForm())
             {
                 <label>Email</label>
-                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
                 <label>Password</label>
                 @Html.TextBoxFor(m => m.Password, new { @class = "form-control", @type = "password" })
                 <br />

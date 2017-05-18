@@ -64,7 +64,7 @@ namespace OneStop.Controllers
                 emailMessage.From.Add(new MailboxAddress("Obviously It's Minh", "Hallo@example.com"));
                 emailMessage.To.Add(new MailboxAddress(model.UserName, user.Email));
                 emailMessage.Subject = "Email confirmation";
-                emailMessage.Body = new TextPart("plain")
+                emailMessage.Body = new TextPart("html")
                 {
                     Text = string.Format("Dear {0} <br/> Thank you for your registration, please click on the below link to complete your registration: <a href='http://localhost:50365/{1}'>Click here</a>",
                 model.UserName, Url.Action("ConfirmEmail", "Account",new { Token = user.Id, Email = user.Email }))
@@ -209,7 +209,8 @@ namespace OneStop.Controllers
                 if (results.Succeeded)
                     {
                     await _signInManager.SignOutAsync();
-                    _db.Tourists.Remove(deleteTourist);
+                        _db.Entry(deleteTourist.Attractions).State = EntityState.Deleted;
+                     _db.Tourists.Remove(deleteTourist);
                     _db.SaveChanges();
                     return RedirectToAction("Index");
                 }

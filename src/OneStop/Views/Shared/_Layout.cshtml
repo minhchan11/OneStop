@@ -20,7 +20,7 @@
                 <li>@Html.ActionLink("Home", "Index", "Home")</li>
                 @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                 {
-                    <li>@Html.ActionLink("Roles", "Index", "Roles")</li>
+                    <li>@Html.ActionLink("Admin", "Index", "Admin")</li>
                 }
             </ul>
         </div>
