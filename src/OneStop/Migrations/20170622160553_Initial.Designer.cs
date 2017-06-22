@@ -8,7 +8,7 @@ using OneStop.Models;
 namespace OneStop.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170517213711_Initial")]
+    [Migration("20170622160553_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
